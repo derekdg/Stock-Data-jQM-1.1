@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Stock Quote: Testing using Jasmine</title>
+
+  <!-- Jasmine shortcut icon -->
+  <link rel="shortcut icon" type="image/png" href="../images/jasmine_favicon.png">
+
+  <!-- Jasmine library & stylesheet -->
+  <link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+  <script type="text/javascript" src="jasmine/jasmine.js"></script>
+  <script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+
+
+  <!-- include SOURCE files here... -->
+  <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="../js/myQuote.js?n=13"></script>
+  
+  
+  <!-- include TEST files here... -->
+  <script type="text/javascript" src="test_myQuote.js?n=129889"></script>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
+</script>
+
+
+</body>
+</html>

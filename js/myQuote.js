@@ -17,13 +17,13 @@ var myQuote = {
 			var $d = myQuote.getStockData();
 
 			//After retrieving the JSON data, populate the list view:
-			$d.success( function (json) { 
+			$d.success( function (json, textStatus, jqXHR) { 
 				
 				//Build the <li> items for the listview:
-				myQuote.buildStats(json); 
-				
+				var ulist = myQuote.buildStats(json); 
+
 				//Reload the listview:
-				myQuote.populateListview(); 
+				myQuote.populateListview(ulist); 
 				
 			} );
 
@@ -47,39 +47,49 @@ var myQuote = {
 		//Return the jQuery deferred obj:
 		return $defer;
 	},
-
+	
 	buildStats: function(json) {
 
 		var o = json.query.results.quote;
 	
-		ht = "<li data-role='list-divider'>Stock Data</li>";
-		ht = ht + "<li>" + o.Name + " (" + o.StockExchange + ":" + o.Symbol + ")</li>";
-		ht = ht + "<li>Ask Price <span class='ui-li-count'>$" + valueOrDefault(o.AskRealtime,0) + "</span></li>";
-		ht = ht + "<li data-role='list-divider'>Dividend Data</li>";
-		ht = ht + "<li>Dividend Yield <span class='ui-li-count'>" + valueOrDefault(o.DividendYield, 0) + "%</span></li>";
-		ht = ht + "<li>Dividend per Share <span class='ui-li-count'>$" + valueOrDefault(o.DividendShare) + "</span></li>";
-		ht = ht + "<li>Ex-Dividend Date <span class='ui-li-count'>" + valueOrDefault(o.ExDividendDate) + "</span></li>";
-		ht = ht + "<li>Dividend Pay Date <span class='ui-li-count'>" + valueOrDefault(o.DividendPayDate) + "</span></li>";			
-		ht = ht + "<li data-role='list-divider'>Ratios</li> ";
-		ht = ht + "<li>EPS <span class='ui-li-count'>" + valueOrDefault(o.EarningsShare) + "</span></li>";
-		ht = ht + "<li>EBITDA <span class='ui-li-count'>" + valueOrDefault(o.EBITDA) + "</span></li>";
-		ht = ht + "<li>Price/Sales <span class='ui-li-count'>" + valueOrDefault(o.PriceSales) + "</span></li>";
-		ht = ht + "<li>Price/Book <span class='ui-li-count'>" + valueOrDefault(o.PriceBook) + "</span></li>";
-		ht = ht + "<li>Price/Earnings <span class='ui-li-count'>" + valueOrDefault(o.PERatio) + "</span></li>";
-		ht = ht + "<li>PEG <span class='ui-li-count'>" + valueOrDefault(o.PEGRatio) + "</span></li>";
-		ht = ht + "<li>Short <span class='ui-li-count'>" + valueOrDefault(o.ShortRatio) + "</span></li>";
+		var list = $('<ul/>').attr({
+  			'data-role': 'listview',
+  			'data-inset': 'true',
+  			'id': 'myKeyStatsList',
+  			'data-divider-theme': 'f',
+  			'data-theme': 'f'
+		});
+    
+		list.append("<li data-role='list-divider'>Stock Data</li>");
+		list.append("<li>" + o.Name + " (" + o.StockExchange + ":" + o.Symbol + ")</li>");
+		list.append("<li>Ask Price <span class='ui-li-count'>$" + valueOrDefault(o.AskRealtime,0) + "</span></li>");
+		list.append("<li data-role='list-divider'>Dividend Data</li>");
+		list.append("<li>Dividend Yield <span class='ui-li-count'>" + valueOrDefault(o.DividendYield, 0) + "%</span></li>");
+		list.append("<li>Dividend per Share <span class='ui-li-count'>$" + valueOrDefault(o.DividendShare) + "</span></li>");
+		list.append("<li>Ex-Dividend Date <span class='ui-li-count'>" + valueOrDefault(o.ExDividendDate) + "</span></li>");
+		list.append("<li>Dividend Pay Date <span class='ui-li-count'>" + valueOrDefault(o.DividendPayDate) + "</span></li>");			
+		list.append("<li data-role='list-divider'>Ratios</li> ");
+		list.append("<li>EPS <span class='ui-li-count'>" + valueOrDefault(o.EarningsShare) + "</span></li>");
+		list.append("<li>EBITDA <span class='ui-li-count'>" + valueOrDefault(o.EBITDA) + "</span></li>");
+		list.append("<li>Price/Sales <span class='ui-li-count'>" + valueOrDefault(o.PriceSales) + "</span></li>");
+		list.append("<li>Price/Book <span class='ui-li-count'>" + valueOrDefault(o.PriceBook) + "</span></li>");
+		list.append("<li>Price/Earnings <span class='ui-li-count'>" + valueOrDefault(o.PERatio) + "</span></li>");
+		list.append("<li>PEG <span class='ui-li-count'>" + valueOrDefault(o.PEGRatio) + "</span></li>");
+		list.append("<li>Short <span class='ui-li-count'>" + valueOrDefault(o.ShortRatio) + "</span></li>");
 		
-		//Store the stock stats on the myQuote object:
-		myQuote.stockStats = ht;
+		return list;
 
-	},
+	},	
 	
-	populateListview: function() {
+	populateListview: function(list) {
 
 		//Reload the listview:
-		$("#myKeyStatsList").empty().append(myQuote.stockStats).listview("refresh");
-	
+		$("#divStatsList").empty();
+		
+		list.appendTo($("#divStatsList")).listview();
+
 	}
+	
 	
 }	//END: myQuote
 
